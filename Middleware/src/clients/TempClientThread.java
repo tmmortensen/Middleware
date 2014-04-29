@@ -1,7 +1,5 @@
 package clients;
 
-import interfaces.IPubSub;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,22 +9,22 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.Scanner;
 
-public class TempClientThread implements IPubSub {
-	int temp; // Temperature
+public class TempClientThread {
 
-	MulticastSocket tempClient = new MulticastSocket(8885);
-	InetAddress group = InetAddress.getByName("225.4.5.6");
-
-	public static Scanner scan = new Scanner(System.in);
+	private int temp; // Temperature
+	private MulticastSocket tempClient = new MulticastSocket(8885);
+	private InetAddress group = InetAddress.getByName("225.255.255.255");
+	private static Scanner scan = new Scanner(System.in);
 
 	public TempClientThread() throws SocketException, IOException {
-		// socket.send(packet);
 		tempClient.joinGroup(group);
 	}
 
-	@Override
-	public int publish(String thermostat) {
+	public int publish() {
+
 		String indtastning = null;
+		String inputAndUnit = null;
+		String tempString = "#thermometer";
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		// while loop to get temperature
@@ -34,12 +32,12 @@ public class TempClientThread implements IPubSub {
 			System.out.println("Enter temp value");
 			try {
 				indtastning = br.readLine();
+				inputAndUnit = indtastning + tempString;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			DatagramPacket data = new DatagramPacket(indtastning.getBytes(),
-					indtastning.length(), group, 8885);
+			DatagramPacket data = new DatagramPacket(inputAndUnit.getBytes(),
+					inputAndUnit.length(), group, 8885);
 			try {
 				temp = Integer.parseInt(indtastning);
 				if (temp == 0) {
@@ -61,11 +59,6 @@ public class TempClientThread implements IPubSub {
 			}
 		}
 		return temp;
-
-	}
-
-	@Override
-	public void subscribe() {
 
 	}
 }

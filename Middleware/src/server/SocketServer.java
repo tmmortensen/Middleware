@@ -7,45 +7,53 @@ import java.net.MulticastSocket;
 
 public class SocketServer implements Runnable {
 
-	double average = 0;
-	int value;
-	double sum = 0;
-	int numberOfInputs = 0;
+	private double average = 0;
+	private int value = 0;
+	private double sum = 0;
+	private int numberOfInputs = 0;
 
 	@Override
 	public void run() {
-
-		try {
-
-			while (true) {
-				InetAddress group = InetAddress.getByName("225.4.5.6");
-				MulticastSocket server = new MulticastSocket(8885);
-				server.joinGroup(group);
-				byte[] buf = new byte[4];
-				DatagramPacket data = new DatagramPacket(buf, buf.length);
-				server.receive(data);
-				String convertString = new String(data.getData());
-				System.out.println(convertString + "\n");
-
-				value = Integer.parseInt(convertString.trim());
-				sum += value;
-				average = sum / ++numberOfInputs;
-				System.out.println("value: " + value + " average: " + average);
-				Thread.sleep(200);
-			}
-		} catch (IOException e) {
-			System.out.println(e);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		subscribe();
 	}
 
 	public double avg() {
 		return average;
 	}
 
-	public void subscribe(String) {
-	
+	public void subscribe() {
+		MulticastSocket server = null;
+		try {
+			// while loop to subscribe the data published
+			while (true) {
+				InetAddress group = InetAddress.getByName("225.255.255.255");
+				server = new MulticastSocket(8885);
+				server.joinGroup(group);
+				byte[] buf = new byte[200];
+				DatagramPacket data = new DatagramPacket(buf, buf.length);
+				server.receive(data);
+				String convertString = new String(data.getData());
+
+				String[] parts = convertString.split("#");
+				String measure = parts[0]; // Measurement
+				String unit = parts[1].trim(); // Unit
+				System.out.println(unit + "\n");
+
+				if (unit.equals("thermometer")) {
+					value = Integer.parseInt(measure.trim());
+					sum += value;
+					average = sum / ++numberOfInputs;
+					System.out.println("value: " + value + " average: "
+							+ average + " on unit " + unit);
+				}
+
+				Thread.sleep(200);
+			}
+		} catch (IOException e) {
+			server.close();
+			System.out.println(e);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }
