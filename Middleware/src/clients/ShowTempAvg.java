@@ -25,9 +25,15 @@ public class ShowTempAvg {
 				.lookup("//localhost/RmiServer");
 
 		while (true) {
-			System.out.println("Tast Enter for at se gennemsnitstemperaturen");
-			scan.nextLine();
-			System.out.println(obj.getTemp());
+			System.out.println("Dette er den nuværende gennemsnitstemperatur: "
+					+ obj.getTemp());
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -53,13 +53,16 @@ public class MainServer implements Runnable {
 				String[] parts = convertString.split("#");
 				String measure = parts[0]; // Measurement
 				String unit = parts[1].trim(); // Unit
-				System.out.println(unit + "\n");
 
 				// calculation of the avg. temp.
 				if (unit.equals("thermometer")) {
 					value = Integer.parseInt(measure.trim());
 					sum += value;
 					average = sum / ++numberOfInputs;
+					System.out.println("value: " + value + " average: "
+							+ average + " on unit " + unit);
+				}
+				if (unit.equals("moisturemeter")) {
 					System.out.println("value: " + value + " average: "
 							+ average + " on unit " + unit);
 				}

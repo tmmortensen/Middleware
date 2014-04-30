@@ -13,10 +13,10 @@ import java.util.Scanner;
  * @author thomasmortensen
  * 
  */
-public class GetTempClient {
+public class GetMoistClient {
 
 	private int temp; // Temperature
-	private final int MAX_TEMP = 24;
+	private final int MAX_MOIST = 24;
 	int generateInt;
 	String generateString;
 	Random random;
@@ -29,16 +29,16 @@ public class GetTempClient {
 	 * @throws SocketException
 	 * @throws IOException
 	 */
-	public GetTempClient() throws SocketException, IOException {
+	public GetMoistClient() throws SocketException, IOException {
 		tempClient.joinGroup(group);
 		random = new Random();
 	}
 
 	public void generateTemp() {
-		generateInt = random.nextInt(MAX_TEMP) + 1;
+		generateInt = random.nextInt(MAX_MOIST) + 1;
 
-		while (generateInt < 14 || generateInt > MAX_TEMP) {
-			generateInt = random.nextInt(MAX_TEMP) + 1;
+		while (generateInt < 14 || generateInt > MAX_MOIST) {
+			generateInt = random.nextInt(MAX_MOIST) + 1;
 		}
 	}
 
@@ -55,7 +55,7 @@ public class GetTempClient {
 
 		String input = null;
 		String inputAndUnit = null;
-		String tempString = "#thermometer";
+		String moistString = "#moisturemeter";
 		// BufferedReader br = new BufferedReader(new
 		// InputStreamReader(System.in));
 
@@ -64,9 +64,9 @@ public class GetTempClient {
 			generateTemp();
 			getTemp();
 			input = generateString;
-			inputAndUnit = input + tempString;
+			inputAndUnit = input + moistString;
 
-			System.out.println("Actual temperature: " + input);
+			System.out.println("Actual moisture: " + input);
 
 			try {
 				Thread.sleep(1000);
