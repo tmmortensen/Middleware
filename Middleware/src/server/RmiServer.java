@@ -7,16 +7,30 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * 
+ * @author thomasmortensen
+ * 
+ */
 public class RmiServer extends UnicastRemoteObject implements
 		RmiServerInterface {
 
 	private static final long serialVersionUID = 1L;
-	static SocketServer ss = new SocketServer();
+	static MainServer ss = new MainServer();
 
+	/**
+	 * 
+	 * @throws RemoteException
+	 */
 	public RmiServer() throws RemoteException {
 		super();
 	}
 
+	/**
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String args[]) throws Exception {
 
 		System.out.println("RMI server startet");
