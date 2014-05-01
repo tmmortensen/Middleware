@@ -11,8 +11,9 @@ import java.rmi.RemoteException;
 public interface RmiServerInterface extends Remote {
 
 	/**
+	 * Method to get the average temp. from the mainserver
 	 * 
-	 * @return
+	 * @return average temperature
 	 * @throws RemoteException
 	 */
 	public double getTemp() throws RemoteException;

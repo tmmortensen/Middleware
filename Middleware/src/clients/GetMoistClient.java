@@ -6,25 +6,25 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
+ * Class that contains a moisturemeter
  * 
  * @author thomasmortensen
  * 
  */
 public class GetMoistClient {
 
-	private int temp; // Temperature
+	private int moist; // Moisture
 	private final int MAX_MOIST = 24;
 	int generateInt;
 	String generateString;
 	Random random;
 	private MulticastSocket tempClient = new MulticastSocket(8885);
 	private InetAddress group = InetAddress.getByName("225.255.255.255");
-	private static Scanner scan = new Scanner(System.in);
 
 	/**
+	 * Constructor to set up the broadcast and create a random generator
 	 * 
 	 * @throws SocketException
 	 * @throws IOException
@@ -34,7 +34,10 @@ public class GetMoistClient {
 		random = new Random();
 	}
 
-	public void generateTemp() {
+	/**
+	 * Method to generate a random moisture measurement within the wanted area
+	 */
+	public void generateMoist() {
 		generateInt = random.nextInt(MAX_MOIST) + 1;
 
 		while (generateInt < 14 || generateInt > MAX_MOIST) {
@@ -42,29 +45,35 @@ public class GetMoistClient {
 		}
 	}
 
-	public String getTemp() {
+	/**
+	 * Method to make a string of the moisture so it can be transmitted via.
+	 * broadcast.
+	 * 
+	 * @param generateString
+	 * @return a string generated from an integer
+	 */
+	public String getMoist() {
 		generateString = Integer.toString(generateInt);
 		return generateString;
 	}
 
 	/**
+	 * A method that makes the broadcast of a moisture measurement possible
 	 * 
-	 * @return
+	 * @return moisture measurement that is uses to check whether the
+	 *         temperature is in the wanted area or not.
 	 */
-	public int publish() {
+	public int publish(String event) {
 
 		String input = null;
 		String inputAndUnit = null;
-		String moistString = "#moisturemeter";
-		// BufferedReader br = new BufferedReader(new
-		// InputStreamReader(System.in));
 
 		// while loop to get temperature
 		while (true) {
-			generateTemp();
-			getTemp();
+			generateMoist();
+			getMoist();
 			input = generateString;
-			inputAndUnit = input + moistString;
+			inputAndUnit = input + event;
 
 			System.out.println("Actual moisture: " + input);
 
@@ -77,18 +86,17 @@ public class GetMoistClient {
 			DatagramPacket data = new DatagramPacket(inputAndUnit.getBytes(),
 					inputAndUnit.length(), group, 8885);
 			try {
-				temp = Integer.parseInt(input);
-				if (temp == 0) {
+				moist = Integer.parseInt(input);
+				if (moist == 0) {
 					break;
 				}
-				if (13 < temp && temp < 25) {
+				if (13 < moist && moist < 25) {
 					// break;
 				} else
 					System.out.println("Error. "
 							+ "Temperature should be between 14 and 24");
 			} catch (NumberFormatException n) {
 				System.out.println("Error. Not an integer");
-				scan.next();
 			}
 			try {
 				tempClient.send(data);
@@ -96,7 +104,7 @@ public class GetMoistClient {
 				e1.printStackTrace();
 			}
 		}
-		return temp;
+		return moist;
 
 	}
 }

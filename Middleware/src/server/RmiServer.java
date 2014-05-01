@@ -8,6 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
+ * Class containing an RMI server, wich can send the avg. temp to an RMI client
  * 
  * @author thomasmortensen
  * 
@@ -19,6 +20,8 @@ public class RmiServer extends UnicastRemoteObject implements
 	static MainServer ss = new MainServer();
 
 	/**
+	 * Constructor that creates and exports a new UnicastRemoteObject object
+	 * using an anonymous port.
 	 * 
 	 * @throws RemoteException
 	 */
@@ -27,6 +30,8 @@ public class RmiServer extends UnicastRemoteObject implements
 	}
 
 	/**
+	 * Main method to start the RMI server, and the Main server in another
+	 * thread
 	 * 
 	 * @param args
 	 * @throws Exception

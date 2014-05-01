@@ -6,9 +6,9 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
+ * Class containing a temperature client, which generates temperature data.
  * 
  * @author thomasmortensen
  * 
@@ -17,14 +17,14 @@ public class GetTempClient {
 
 	private int temp; // Temperature
 	private final int MAX_TEMP = 24;
-	int generateInt;
 	String generateString;
+	int generateInt;
 	Random random;
 	private MulticastSocket tempClient = new MulticastSocket(8885);
 	private InetAddress group = InetAddress.getByName("225.255.255.255");
-	private static Scanner scan = new Scanner(System.in);
 
 	/**
+	 * Constructor to set up the broadcast and create a random generator
 	 * 
 	 * @throws SocketException
 	 * @throws IOException
@@ -34,6 +34,9 @@ public class GetTempClient {
 		random = new Random();
 	}
 
+	/**
+	 * Method to generate a random temperature within the wanted area
+	 */
 	public void generateTemp() {
 		generateInt = random.nextInt(MAX_TEMP) + 1;
 
@@ -42,29 +45,35 @@ public class GetTempClient {
 		}
 	}
 
+	/**
+	 * Method to make a string of the temperature so it can be transmitted via.
+	 * broadcast.
+	 * 
+	 * @param generateString
+	 * @return a string generated from an integer
+	 */
 	public String getTemp() {
 		generateString = Integer.toString(generateInt);
 		return generateString;
 	}
 
 	/**
+	 * A method that makes the broadcast of a temperature possible
 	 * 
-	 * @return
+	 * @return temperature that is used to check whether the temperature is in
+	 *         the wanted area or not.
 	 */
-	public int publish() {
+	public int publish(String event) {
 
 		String input = null;
 		String inputAndUnit = null;
-		String tempString = "#thermometer";
-		// BufferedReader br = new BufferedReader(new
-		// InputStreamReader(System.in));
 
 		// while loop to get temperature
 		while (true) {
 			generateTemp();
 			getTemp();
 			input = generateString;
-			inputAndUnit = input + tempString;
+			inputAndUnit = input + event;
 
 			System.out.println("Actual temperature: " + input);
 
@@ -88,15 +97,14 @@ public class GetTempClient {
 							+ "Temperature should be between 14 and 24");
 			} catch (NumberFormatException n) {
 				System.out.println("Error. Not an integer");
-				scan.next();
 			}
 			try {
+				// broadcast the data
 				tempClient.send(data);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
 		return temp;
-
 	}
 }

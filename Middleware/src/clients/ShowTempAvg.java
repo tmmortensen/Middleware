@@ -6,6 +6,8 @@ import java.rmi.Naming;
 import java.util.Scanner;
 
 /**
+ * Class containing an RMI client, which invokes a method on the RMI server and
+ * gets the average temperature.
  * 
  * @author thomasmortensen
  * 
@@ -15,6 +17,7 @@ public class ShowTempAvg {
 	public static Scanner scan = new Scanner(System.in);
 
 	/**
+	 * Main method that starts the client.
 	 * 
 	 * @param agrs
 	 * @throws Exception

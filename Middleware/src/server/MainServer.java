@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 /**
+ * Class that contains a server listening for broadcastsignals and to subscribe
+ * correct events.
  * 
  * @author thomasmortensen
  * 
@@ -16,18 +18,20 @@ public class MainServer implements Runnable {
 	private int value = 0;
 	private double sum = 0;
 	private int numberOfInputs = 0;
+	String event = null;
 
 	/**
-	 * Starts server thread
+	 * Method to start server thread
 	 */
 	@Override
 	public void run() {
-		subscribe();
+		subscribe(event);
 	}
 
 	/**
+	 * Method to send avg. temp. to RMI client
 	 * 
-	 * @return
+	 * @return average temperature
 	 */
 	public double avg() {
 		return average;
@@ -37,7 +41,8 @@ public class MainServer implements Runnable {
 	 * Method that subscribes by listening to a broadcast signal. The
 	 * calculation is only done with signal from the right client.
 	 */
-	public void subscribe() {
+	public void subscribe(String event) {
+		this.event = event;
 		MulticastSocket server = null;
 		try {
 			// while loop to subscribe the data published
@@ -52,24 +57,27 @@ public class MainServer implements Runnable {
 
 				String[] parts = convertString.split("#");
 				String measure = parts[0]; // Measurement
-				String unit = parts[1].trim(); // Unit
+				event = parts[1].trim(); // Unit
 
 				// calculation of the avg. temp.
-				if (unit.equals("thermometer")) {
+				if (event.equals("thermometer")) {
 					value = Integer.parseInt(measure.trim());
 					sum += value;
 					average = sum / ++numberOfInputs;
 					System.out.println("value: " + value + " average: "
-							+ average + " on unit " + unit);
+							+ average + " on unit " + event);
 				}
-				if (unit.equals("moisturemeter")) {
+
+				// moisturemeter event
+				if (event.equals("moisturemeter")) {
 					System.out.println("value: " + value + " average: "
-							+ average + " on unit " + unit);
+							+ average + " on unit " + event);
 				}
 
 				Thread.sleep(200);
 			}
 		} catch (IOException e) {
+			// close server if exception is thrown
 			server.close();
 			System.out.println(e);
 		} catch (InterruptedException e) {
