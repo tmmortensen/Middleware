@@ -65,6 +65,7 @@ public class GetTempClient {
 	 */
 	public int publish(String event) {
 
+		// event = eventTypes.event[1];
 		String input = null;
 		String inputAndUnit = null;
 
@@ -106,5 +107,9 @@ public class GetTempClient {
 			}
 		}
 		return temp;
+	}
+
+	public void showGeneratedTemp() {
+
 	}
 }

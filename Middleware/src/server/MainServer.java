@@ -50,7 +50,7 @@ public class MainServer implements Runnable {
 				InetAddress group = InetAddress.getByName("225.255.255.255");
 				server = new MulticastSocket(8885);
 				server.joinGroup(group);
-				byte[] buf = new byte[200];
+				byte[] buf = new byte[20];
 				DatagramPacket data = new DatagramPacket(buf, buf.length);
 				server.receive(data);
 				String convertString = new String(data.getData());

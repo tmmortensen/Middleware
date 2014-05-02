@@ -17,7 +17,8 @@ public class GetMoistMain {
 	public static void main(String args[]) throws Exception {
 
 		GetMoistClient mc = new GetMoistClient();
-		String event = "#moisturemeter";
+		EventTypes eventTypes = new EventTypes();
+		String event = eventTypes.event[0];
 
 		mc.publish(event);
 	}

@@ -17,7 +17,8 @@ public class GetTempMain {
 	public static void main(String args[]) throws Exception {
 
 		GetTempClient tc = new GetTempClient();
-		String event = "#thermometer";
+		EventTypes eventTypes = new EventTypes();
+		String event = eventTypes.event[1];
 
 		tc.publish(event);
 	}
