@@ -19,6 +19,7 @@ public class MainServer implements Runnable {
 	private double sum = 0;
 	private int numberOfInputs = 0;
 	String event = null;
+	String measure = null;
 
 	/**
 	 * Method to start server thread
@@ -29,20 +30,11 @@ public class MainServer implements Runnable {
 	}
 
 	/**
-	 * Method to send avg. temp. to RMI client
-	 * 
-	 * @return average temperature
-	 */
-	public double avg() {
-		return average;
-	}
-
-	/**
 	 * Method that subscribes by listening to a broadcast signal. The
 	 * calculation is only done with signal from the right client.
 	 */
 	public void subscribe(String event) {
-		this.event = event;
+
 		MulticastSocket server = null;
 		try {
 			// while loop to subscribe the data published
@@ -56,22 +48,17 @@ public class MainServer implements Runnable {
 				String convertString = new String(data.getData());
 
 				String[] parts = convertString.split("#");
-				String measure = parts[0]; // Measurement
+				measure = parts[0]; // Measurement
 				event = parts[1].trim(); // Unit
 
-				// calculation of the avg. temp.
+				// temp event
 				if (event.equals("thermometer")) {
-					value = Integer.parseInt(measure.trim());
-					sum += value;
-					average = sum / ++numberOfInputs;
-					System.out.println("value: " + value + " average: "
-							+ average + " on unit " + event);
+					avg();
 				}
 
 				// moisturemeter event
 				if (event.equals("moisturemeter")) {
-					System.out.println("value: " + value + " average: "
-							+ average + " on unit " + event);
+					System.out.println("moist value: " + value);
 				}
 
 				Thread.sleep(200);
@@ -83,5 +70,19 @@ public class MainServer implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Method to send calculated avg. temp. to RMI client
+	 * 
+	 * @return average temperature
+	 */
+	public double avg() {
+		value = Integer.parseInt(measure.trim());
+		sum += value;
+		average = sum / ++numberOfInputs;
+		System.out.println("current temperature: " + value
+				+ " average temperature: " + average);
+		return average;
 	}
 }
