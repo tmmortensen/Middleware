@@ -20,6 +20,7 @@ public class MainServer implements Runnable {
 	private int numberOfInputs = 0;
 	String event = null;
 	String measure = null;
+	MulticastSocket server = null;
 
 	/**
 	 * Method to start server thread
@@ -35,7 +36,6 @@ public class MainServer implements Runnable {
 	 */
 	public void subscribe(String event) {
 
-		MulticastSocket server = null;
 		try {
 			// while loop to subscribe the data published
 			while (true) {

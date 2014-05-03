@@ -108,8 +108,4 @@ public class GetTempClient {
 		}
 		return temp;
 	}
-
-	public void showGeneratedTemp() {
-
-	}
 }
